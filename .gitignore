@@ -1,0 +1,49 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs and PID files
+*.log
+*.pid
+.service.pid
+.server.pid
+.dev.pid
+logs/
+
+# Frontend builds and dependencies
+frontend/node_modules/
+frontend/dist/
+frontend/.eslintcache
+
+# macOS system files
+.DS_Store
+
+# State caches (generated at runtime)
+backend/skills/acps/state/discovery/*.json
+backend/skills/acps/state/discovery/*.yaml
+!backend/skills/acps/state/discovery/discovery_config.yaml
+backend/skills/acps/state/tasks/*.json
+mcp_server/state/discovery/*.json
+mcp_server/state/discovery/*.yaml
+!mcp_server/state/discovery/discovery_config.yaml
+mcp_server/state/tasks/*.json
+
+# IDE config
+.idea/
+.vscode/
+
+# Ignore Mock Discovery Server
+mocked-discovery/
