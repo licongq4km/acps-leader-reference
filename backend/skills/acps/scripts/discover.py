@@ -21,21 +21,21 @@ import yaml
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SKILL_ROOT = os.path.join(SCRIPT_DIR, "..")
 STATE_DISCOVERY_DIR = os.path.join(SKILL_ROOT, "state", "discovery")
-CONFIG_FILE = os.path.join(STATE_DISCOVERY_DIR, "discovery_config.yaml")
+CONFIG_FILE = os.path.join(SKILL_ROOT, "state", "config", "config.yaml")
 
 
 def _load_discovery_url() -> str:
-    """Read discovery URL from discovery_config.yaml.
-    Prefers custom_url; falls back to default_url if custom_url is empty.
+    """Read discovery URL from state/config/config.yaml.
+    Prefers custom_discovery_url; falls back to default_discovery_url if empty.
     """
     default_url = "https://ioa.pub/discovery/acps-adp-v2/discover"
     try:
         with open(CONFIG_FILE, encoding="utf-8") as f:
             cfg = yaml.safe_load(f) or {}
-        custom = (cfg.get("custom_url") or "").strip()
+        custom = (cfg.get("custom_discovery_url") or "").strip()
         if custom:
             return custom
-        return cfg.get("default_url") or default_url
+        return cfg.get("default_discovery_url") or default_url
     except (FileNotFoundError, yaml.YAMLError):
         return default_url
 

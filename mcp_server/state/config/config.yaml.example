@@ -1,0 +1,2 @@
+default_discovery_url: "https://ioa.pub/discovery/acps-adp-v2/discover"
+custom_discovery_url: ""

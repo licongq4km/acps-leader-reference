@@ -14,7 +14,7 @@ Discovery is a prerequisite to AIP interaction. You must discover an agent befor
 | Discovery Server | A hosted service that receives queries, matches against its registry, and returns ranked ACS results |
 | Partner Agent | An agent that has already completed trusted registration; appears in discovery results when it matches the query |
 
-Agents that appear in discovery results are already trusted and registered — no additional registration step is needed on your side. The discovery server URL is configured in `state/discovery/discovery_config.yaml`.
+Agents that appear in discovery results are already trusted and registered — no additional registration step is needed on your side. The discovery server URL is configured in `state/config/config.yaml`.
 
 ## 3. Discovery Request Format
 

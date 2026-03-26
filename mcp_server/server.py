@@ -35,7 +35,7 @@ from acps_sdk.aip.aip_base_model import TaskState  # noqa: E402
 STATE_DIR = SERVER_DIR / "state"
 DISCOVERY_DIR = STATE_DIR / "discovery"
 TASKS_DIR = STATE_DIR / "tasks"
-CONFIG_FILE = DISCOVERY_DIR / "discovery_config.yaml"
+CONFIG_FILE = STATE_DIR / "config" / "config.yaml"
 
 DISCOVERY_DIR.mkdir(parents=True, exist_ok=True)
 TASKS_DIR.mkdir(parents=True, exist_ok=True)
@@ -98,8 +98,8 @@ def _load_discovery_url() -> str:
     try:
         with open(CONFIG_FILE, encoding="utf-8") as f:
             cfg = yaml.safe_load(f) or {}
-        custom = (cfg.get("custom_url") or "").strip()
-        return custom if custom else cfg.get("default_url") or default_url
+        custom = (cfg.get("custom_discovery_url") or "").strip()
+        return custom if custom else cfg.get("default_discovery_url") or default_url
     except (FileNotFoundError, yaml.YAMLError):
         return default_url
 

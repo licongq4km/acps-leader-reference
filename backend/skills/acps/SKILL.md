@@ -239,7 +239,7 @@ Call this when the user explicitly wants to abort, or when the user rejects the 
 - Start a task without user confirmation of the selected agent
 - Auto-complete a task without user approval of the results
 - Return the full ACS document (`raw_payload`) to the user — show only `normalized_summary` fields
-- Overwrite `state/discovery/discovery_config.yaml`
+- Overwrite `state/config/config.yaml`
 
 ---
 
@@ -278,12 +278,12 @@ Written and updated by all AIP scripts. Contains:
 
 **Rule**: Read `state` from this cache before calling any AIP command to validate it is allowed.
 
-### Discovery URL config — `state/discovery/discovery_config.yaml`
+### Global config — `state/config/config.yaml`
 
 User-editable. Never overwrite it from scripts.
 ```yaml
-default_url: "https://ioa.pub/discovery/acps-adp-v2/discover"
-custom_url: ""
+default_discovery_url: "https://ioa.pub/discovery/acps-adp-v2/discover"
+custom_discovery_url: ""
 ```
 
 ---

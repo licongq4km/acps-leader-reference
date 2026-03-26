@@ -48,10 +48,14 @@ VITE_API_BASE_URL=http://localhost:7002
 ```
 
 **发现服务地址配置**
-在智能体执行发现流程前，需要配置ADP发现服务器，请配置以下文件：
-- Agent Skill 模式：`backend/skills/acps/state/discovery/discovery_config.yaml`
-- MCP Server 模式：`mcp_server/state/discovery/discovery_config.yaml`
-将其中的 `custom_url` 字段填入真实的发现服务地址。
+在智能体执行发现流程前，需要配置ADP发现服务器，请复制示例配置并填写：
+```bash
+# Agent Skill 模式
+cp backend/skills/acps/state/config/config.yaml.example backend/skills/acps/state/config/config.yaml
+# MCP Server 模式
+cp mcp_server/state/config/config.yaml.example mcp_server/state/config/config.yaml
+```
+将其中的 `custom_discovery_url` 字段填入真实的发现服务地址。
 
 ### 2. 一键启动
 

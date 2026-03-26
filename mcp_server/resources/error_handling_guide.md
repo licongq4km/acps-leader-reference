@@ -23,7 +23,7 @@ All scripts output a JSON object to stdout. On error, the output is:
 
 ### 1.1 Cannot reach discovery server
 - **Symptom**: `httpx.ConnectError`, `httpx.TimeoutException`, or HTTP 5xx from discovery URL
-- **Action**: Retry up to 2 times with a 3-second interval. If still failing, report to user that the discovery service is unreachable and suggest checking `state/discovery/discovery_config.yaml` for a correct URL.
+- **Action**: Retry up to 2 times with a 3-second interval. If still failing, report to user that the discovery service is unreachable and suggest checking `state/config/config.yaml` for a correct URL.
 - **Output**: `"error_type": "discovery_error"`
 
 ### 1.2 No agents found
@@ -32,7 +32,7 @@ All scripts output a JSON object to stdout. On error, the output is:
 - **Output**: `"error_type": "discovery_error"`, `"error": "No agents found for query: ..."`
 
 ### 1.3 Config file missing or malformed
-- **Symptom**: `state/discovery/discovery_config.yaml` does not exist or is invalid YAML
+- **Symptom**: `state/config/config.yaml` does not exist or is invalid YAML
 - **Action**: Fall back to the hardcoded default URL `https://ioa.pub/discovery/acps-adp-v2/discover`. Log a warning. Do not crash.
 
 ---
