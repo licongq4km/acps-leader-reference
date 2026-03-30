@@ -45,5 +45,12 @@ mcp_server/state/config/config.yaml
 .idea/
 .vscode/
 
-# Ignore Mock Discovery Server
-mocked-discovery/
+# ATR certificates and private keys (sensitive, generated per-environment)
+backend/certs/
+backend/private/
+
+# ACS registration file (contains environment-specific AIC and endpoints)
+acs.json
+
+# Temporary / local-only files (mock services, convenience scripts, etc.)
+temp/

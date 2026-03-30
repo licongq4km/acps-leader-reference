@@ -12,17 +12,14 @@ import argparse
 import asyncio
 import json
 import os
-import sys
 from datetime import datetime, timezone
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SKILL_ROOT = os.path.join(SCRIPT_DIR, "..")
 STATE_TASKS_DIR = os.path.join(SKILL_ROOT, "state", "tasks")
 
-sys.path.insert(0, os.path.join(SKILL_ROOT, "dependency"))
-
-from acps_sdk.aip.aip_rpc_client import AipRpcClient  # noqa: E402
-from acps_sdk.aip.aip_base_model import TaskState  # noqa: E402
+from acps_sdk.aip.aip_rpc_client import AipRpcClient
+from acps_sdk.aip.aip_base_model import TaskState
 
 TERMINAL_STATES = {
     TaskState.Completed.value,

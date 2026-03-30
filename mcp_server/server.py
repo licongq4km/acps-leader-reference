@@ -10,7 +10,6 @@ Transport : SSE (default port 7004)
 import asyncio
 import json
 import os
-import sys
 import time
 import uuid
 from datetime import datetime, timezone
@@ -20,14 +19,10 @@ import httpx
 import yaml
 from mcp.server.fastmcp import FastMCP
 
-# ---------------------------------------------------------------------------
-# SDK path — local copy under mcp_server/acps_sdk
-# ---------------------------------------------------------------------------
 SERVER_DIR = Path(__file__).parent.resolve()
-sys.path.insert(0, str(SERVER_DIR))
 
-from acps_sdk.aip.aip_rpc_client import AipRpcClient  # noqa: E402
-from acps_sdk.aip.aip_base_model import TaskState  # noqa: E402
+from acps_sdk.aip.aip_rpc_client import AipRpcClient
+from acps_sdk.aip.aip_base_model import TaskState
 
 # ---------------------------------------------------------------------------
 # State directories (independent from the skill-based agent)
