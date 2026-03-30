@@ -194,6 +194,7 @@ bash backend/stop.sh
 
 - [ACPS 智能体注册门户](https://ioa.pub/registry-web/)
 - [ACPS 项目主页](https://github.com/AIP-PUB)
+- 详细教程请参考：[ACPS 使用教程](https://github.com/AIP-PUB/Agent-Interconnection-Protocol-Project/blob/main/Guide/Tutorials.md)
 - [ACPS 协议规范](https://github.com/AIP-PUB/Agent-Interconnection-Protocol-Project)
 - [ACPs-CA-Challenge](https://github.com/AIP-PUB/ACPs-CA-Challenge)
 - [ACPs-CA-Client](https://github.com/AIP-PUB/ACPs-CA-Client)
