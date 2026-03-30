@@ -5,6 +5,9 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 LOG_FILE="$SCRIPT_DIR/server.log"
 PID_FILE="$SCRIPT_DIR/.server.pid"
+if [ -f "$SCRIPT_DIR/.env" ]; then
+    set -a; . "$SCRIPT_DIR/.env"; set +a
+fi
 PORT="${MCP_SERVER_PORT:-7004}"
 
 # Check if already running

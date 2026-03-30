@@ -15,14 +15,28 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+from dotenv import load_dotenv
 import httpx
 import yaml
 from mcp.server.fastmcp import FastMCP
 
 SERVER_DIR = Path(__file__).parent.resolve()
+load_dotenv(SERVER_DIR / ".env")
 
 from acps_sdk.aip.aip_rpc_client import AipRpcClient
 from acps_sdk.aip.aip_base_model import TaskState
+
+try:
+    from mtls import get_client_ssl_context as _build_ssl_ctx
+except ImportError:
+    _build_ssl_ctx = None
+
+def _get_ssl_context():
+    """mTLS context for Partner HTTPS, or None for HTTP fallback."""
+    if _build_ssl_ctx is None:
+        return None
+    return _build_ssl_ctx(SERVER_DIR)
+
 
 # ---------------------------------------------------------------------------
 # State directories (independent from the skill-based agent)
@@ -310,7 +324,8 @@ async def start_task(aic: str, task_description: str, session_id: str,
         return json.dumps({"success": False, "error": f"No endpoint URL for aic: {aic}", "error_type": "cache_miss"})
 
     tid = task_id or f"task-{uuid.uuid4()}"
-    client = AipRpcClient(partner_url=partner_url, leader_id=leader)
+    ssl_ctx = _get_ssl_context() if partner_url.startswith("https") else None
+    client = AipRpcClient(partner_url=partner_url, leader_id=leader, ssl_context=ssl_ctx)
     try:
         result = await client.start_task(session_id, task_description, task_id=tid)
     except Exception as e:
@@ -364,12 +379,13 @@ async def get_task(task_id: str, leader_aic: str = "",
 
     partner_url = cache.get("partner_url", "")
     session_id = cache.get("session_id", "")
+    ssl_ctx = _get_ssl_context() if partner_url.startswith("https") else None
     deadline = time.monotonic() + poll_timeout
     attempts = 0
 
     while True:
         attempts += 1
-        client = AipRpcClient(partner_url=partner_url, leader_id=leader)
+        client = AipRpcClient(partner_url=partner_url, leader_id=leader, ssl_context=ssl_ctx)
         try:
             result = await client.get_task(task_id, session_id)
         except Exception as e:
@@ -421,7 +437,8 @@ async def continue_task(task_id: str, user_input: str, leader_aic: str = "") -> 
 
     partner_url = cache.get("partner_url", "")
     session_id = cache.get("session_id", "")
-    client = AipRpcClient(partner_url=partner_url, leader_id=leader)
+    ssl_ctx = _get_ssl_context() if partner_url.startswith("https") else None
+    client = AipRpcClient(partner_url=partner_url, leader_id=leader, ssl_context=ssl_ctx)
     try:
         result = await client.continue_task(task_id, session_id, user_input)
     except Exception as e:
@@ -455,7 +472,8 @@ async def complete_task(task_id: str, leader_aic: str = "") -> str:
 
     partner_url = cache.get("partner_url", "")
     session_id = cache.get("session_id", "")
-    client = AipRpcClient(partner_url=partner_url, leader_id=leader)
+    ssl_ctx = _get_ssl_context() if partner_url.startswith("https") else None
+    client = AipRpcClient(partner_url=partner_url, leader_id=leader, ssl_context=ssl_ctx)
     try:
         result = await client.complete_task(task_id, session_id)
     except Exception as e:
@@ -489,7 +507,8 @@ async def cancel_task(task_id: str, leader_aic: str = "") -> str:
 
     partner_url = cache.get("partner_url", "")
     session_id = cache.get("session_id", "")
-    client = AipRpcClient(partner_url=partner_url, leader_id=leader)
+    ssl_ctx = _get_ssl_context() if partner_url.startswith("https") else None
+    client = AipRpcClient(partner_url=partner_url, leader_id=leader, ssl_context=ssl_ctx)
     try:
         result = await client.cancel_task(task_id, session_id)
     except Exception as e:

@@ -55,3 +55,8 @@ MCP_SERVER_URL: str = os.getenv("MCP_SERVER_URL", f"http://localhost:{MCP_SERVER
 # ---------------------------------------------------------------------------
 SERVICE_HOST: str = os.getenv("SERVICE_HOST", "0.0.0.0")
 SERVICE_PORT: int = int(os.getenv("SERVICE_PORT", "7002"))
+
+# ---------------------------------------------------------------------------
+# mTLS — resolved in skills/acps/scripts/mtls.py using MTLS_BASE_DIR (optional),
+# MTLS_CERT_DIR / MTLS_KEY_DIR / MTLS_TRUST_BUNDLE (subpaths under resolved base).
+# ---------------------------------------------------------------------------

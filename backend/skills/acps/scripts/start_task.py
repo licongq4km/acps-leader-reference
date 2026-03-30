@@ -18,6 +18,7 @@ import argparse
 import asyncio
 import json
 import os
+import sys
 import uuid
 from datetime import datetime, timezone
 
@@ -25,11 +26,26 @@ from datetime import datetime, timezone
 # Path setup
 # ---------------------------------------------------------------------------
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+if SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, SCRIPT_DIR)
 SKILL_ROOT = os.path.join(SCRIPT_DIR, "..")
 STATE_DISCOVERY_DIR = os.path.join(SKILL_ROOT, "state", "discovery")
 STATE_TASKS_DIR = os.path.join(SKILL_ROOT, "state", "tasks")
 
 from acps_sdk.aip.aip_rpc_client import AipRpcClient
+
+try:
+    from mtls import get_client_ssl_context as _build_ssl_ctx
+except ImportError:
+    _build_ssl_ctx = None
+
+
+def _get_ssl_context():
+    """Build mTLS client context; returns None if not configured (falls back to HTTP)."""
+    if _build_ssl_ctx is None:
+        return None
+    backend_dir = os.path.abspath(os.path.join(SKILL_ROOT, "..", ".."))
+    return _build_ssl_ctx(backend_dir)
 
 
 def _read_dotenv_value(dotenv_path: str, key: str) -> str | None:
@@ -176,7 +192,8 @@ async def start_task(aic: str, task_description: str, session_id: str,
     if not task_id:
         task_id = f"task-{uuid.uuid4()}"
 
-    client = AipRpcClient(partner_url=partner_url, leader_id=leader_aic)
+    ssl_ctx = _get_ssl_context() if partner_url.startswith("https") else None
+    client = AipRpcClient(partner_url=partner_url, leader_id=leader_aic, ssl_context=ssl_ctx)
     try:
         result = await client.start_task(session_id, task_description, task_id=task_id)
     except Exception as e:

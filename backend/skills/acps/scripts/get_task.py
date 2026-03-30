@@ -17,15 +17,32 @@ import argparse
 import asyncio
 import json
 import os
+import sys
 import time
 from datetime import datetime, timezone
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+if SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, SCRIPT_DIR)
 SKILL_ROOT = os.path.join(SCRIPT_DIR, "..")
 STATE_TASKS_DIR = os.path.join(SKILL_ROOT, "state", "tasks")
 
 from acps_sdk.aip.aip_rpc_client import AipRpcClient
 from acps_sdk.aip.aip_base_model import TaskState
+
+try:
+    from mtls import get_client_ssl_context as _build_ssl_ctx
+except ImportError:
+    _build_ssl_ctx = None
+
+
+def _get_ssl_context():
+    """Build mTLS client context; returns None if not configured (falls back to HTTP)."""
+    if _build_ssl_ctx is None:
+        return None
+    backend_dir = os.path.abspath(os.path.join(SKILL_ROOT, "..", ".."))
+    return _build_ssl_ctx(backend_dir)
+
 
 AWAITING_INPUT_STATES = {TaskState.AwaitingInput.value}
 TERMINAL_STATES = {
@@ -97,9 +114,9 @@ def _extract_products_summary(result) -> list:
 
 
 async def _query_once(task_id: str, partner_url: str, session_id: str,
-                      leader_aic: str) -> dict:
+                      leader_aic: str, ssl_ctx=None) -> dict:
     """Send a single Get RPC to the partner and return a normalised result dict."""
-    client = AipRpcClient(partner_url=partner_url, leader_id=leader_aic)
+    client = AipRpcClient(partner_url=partner_url, leader_id=leader_aic, ssl_context=ssl_ctx)
     try:
         result = await client.get_task(task_id, session_id)
     except Exception as e:
@@ -184,13 +201,14 @@ async def get_task(
 
     partner_url = cache.get("partner_url", "")
     session_id = cache.get("session_id", "")
+    ssl_ctx = _get_ssl_context() if partner_url.startswith("https") else None
 
     deadline = time.monotonic() + poll_timeout
     attempts = 0
 
     while True:
         attempts += 1
-        res = await _query_once(task_id, partner_url, session_id, leader_aic)
+        res = await _query_once(task_id, partner_url, session_id, leader_aic, ssl_ctx)
 
         if not res["success"]:
             return res  # network error — surface immediately

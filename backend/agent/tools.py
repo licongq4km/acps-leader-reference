@@ -202,7 +202,10 @@ def run_python(script_name: str, script_args: dict[str, Any]) -> str:
 
     try:
         env = os.environ.copy()
-        env["PYTHONPATH"] = str(BACKEND_DIR) + os.pathsep + env.get("PYTHONPATH", "")
+        # scripts/ must precede backend/ so `import mtls` resolves to skills/acps/scripts/mtls.py
+        env["PYTHONPATH"] = (
+            str(SCRIPTS_DIR) + os.pathsep + str(BACKEND_DIR) + os.pathsep + env.get("PYTHONPATH", "")
+        )
         proc = subprocess.run(
             cmd,
             capture_output=True,

@@ -48,6 +48,8 @@ mcp_server/state/config/config.yaml
 # ATR certificates and private keys (sensitive, generated per-environment)
 backend/certs/
 backend/private/
+mcp_server/certs/
+mcp_server/private/
 
 # ACS registration file (contains environment-specific AIC and endpoints)
 acs.json

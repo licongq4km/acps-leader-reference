@@ -3,6 +3,9 @@
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PID_FILE="$SCRIPT_DIR/.server.pid"
+if [ -f "$SCRIPT_DIR/.env" ]; then
+    set -a; . "$SCRIPT_DIR/.env"; set +a
+fi
 PORT="${MCP_SERVER_PORT:-7004}"
 
 if [ -f "$PID_FILE" ]; then
